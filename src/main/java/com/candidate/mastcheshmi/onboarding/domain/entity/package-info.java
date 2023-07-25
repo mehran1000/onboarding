@@ -17,7 +17,7 @@
  * <p>The "pooled-lo" optimizer is used for here that is a high-performance optimizer that reduces the
  * number of round-trips to the database for generating primary keys. </p>
  */
-    package com.candidate.mastcheshmi.onboarding.domain.entity;
+package com.candidate.mastcheshmi.onboarding.domain.entity;
 
 import com.candidate.mastcheshmi.onboarding.domain.constant.IdGeneratorConstants;
 import org.hibernate.annotations.GenericGenerator;
