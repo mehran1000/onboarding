@@ -1,0 +1,44 @@
+abs-bank:
+  token:
+    secret: asdfSFS34wfsdfsdfSDSD32dfsddDDerQSNCK34SOWEK5354fdgdf4
+  password:
+    generation:
+      policies:
+        lower-case-count: 2
+        upper-case-count: 2
+        special-char-count: 2
+        digit-count: 2
+        length: 10
+  supported-countries:
+    - name: The Netherlands
+      code: NL
+      currency: EUR
+    - name: Belgium
+      code: BE
+      currency: EUR
+    - name: Germany
+      code: DE
+      currency: EUR
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+bucket4j:
+  enabled: true
+  filters:
+    - cache-name: buckets
+      url: /client-api/.*
+      rate-limits:
+        - bandwidths:
+            - capacity: 2
+              time: 1
+              unit: seconds
+
+spring:
+  cache:
+    jcache:
+      config: classpath:ehcache.xml
+  h2:
+    console:
+      enabled: true

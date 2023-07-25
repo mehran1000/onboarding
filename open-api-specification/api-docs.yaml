@@ -1,0 +1,232 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+paths:
+  /client-api/v1/register:
+    post:
+      tags:
+        - Customer Management
+      summary: Register a customer with basic details.
+      operationId: registerCustomer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerRegistrationRequestDto'
+        required: true
+      responses:
+        "200":
+          description: Successfully registered the customer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerRegistrationResponseDto'
+        "409":
+          description: "Conflict: The given userName is already registered."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        "400":
+          description: "Bad Request: Some of the given fields are invalid."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationProblemDetail'
+        "422":
+          description: "Unprocessable Entity: The given country is not supported."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+  /client-api/v1/logon:
+    post:
+      tags:
+        - Customer Management
+      summary: Authenticate the given credentials and issue a JWT token if they input
+        is valid.
+      operationId: logon
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogonRequestDto'
+        required: true
+      responses:
+        "401":
+          description: "Unauthorized: Invalid credentials."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        "400":
+          description: "Bad Request: Some of the given fields are invalid."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationProblemDetail'
+        "200":
+          description: Successfully authenticated the customer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogonResponseDto'
+  /client-api/v1/overview:
+    get:
+      tags:
+        - Customer Management
+      summary: Provides customer's account overview
+      operationId: overview
+      responses:
+        "403":
+          description: "Forbidden: Authorization error."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+        "200":
+          description: Successfully retrieved the account overview.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogonResponseDto'
+components:
+  schemas:
+    AddressDto:
+      required:
+        - city
+        - country
+        - houseNumber
+        - postalCode
+      type: object
+      properties:
+        country:
+          type: string
+          description: The country of the address.
+          example: The Netherlands
+        city:
+          type: string
+          description: The city of the address.
+          example: Almere
+        postalCode:
+          type: string
+          description: The postal code of the address.
+          example: 1325DH
+        houseNumber:
+          type: string
+          description: The house number of the address.
+          example: "60"
+        extraAddressLine:
+          type: string
+          description: Any additional information for the address.
+          example: On third floor
+      description: An object representing the customer address.
+    CustomerRegistrationRequestDto:
+      required:
+        - address
+        - idDocumentBase64
+        - name
+        - userName
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the customer.
+          example: Mehran Mastcheshmi
+        dob:
+          type: string
+          description: The date of birth of the customer.
+          format: date
+          example: 1987-05-09
+        idDocumentBase64:
+          type: string
+          description: The Base64 encoded Id document of the customer.
+          example: PGh0bWwgbGFuZz0iZGUi...
+        userName:
+          type: string
+          description: The username of the customer.
+          example: mastcheshmi
+        address:
+          $ref: '#/components/schemas/AddressDto'
+      description: The registration request.
+    CustomerRegistrationResponseDto:
+      type: object
+      properties:
+        userName:
+          type: string
+          description: The userName of the new customer..
+          example: mastcheshmi
+        password:
+          type: string
+          description: The password of the new customer.
+      description: Response object to a successful registration.
+    ProblemDetail:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri
+        properties:
+          type: object
+          additionalProperties:
+            type: object
+    ValidationProblemDetail:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri
+        properties:
+          type: object
+          additionalProperties:
+            type: object
+        fieldValidationError:
+          type: object
+          additionalProperties:
+            type: string
+    LogonRequestDto:
+      required:
+        - password
+        - userName
+      type: object
+      properties:
+        userName:
+          type: string
+          description: The name of the customer.
+          example: mastcheshmi
+        password:
+          type: string
+          description: The password of the customer.
+          example: XUl6n!F8(J
+      description: The logon request.
+    LogonResponseDto:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: The access token that the client can use to call secured services.
+      description: Response object to a logon request.

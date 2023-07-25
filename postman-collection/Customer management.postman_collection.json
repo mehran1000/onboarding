@@ -1,0 +1,787 @@
+{
+  "info": {
+    "_postman_id": "c880809a-c29e-4ed6-8d83-00a6cbfb5948",
+    "name": "Customer management",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "17673046"
+  },
+  "item": [
+    {
+      "name": "Registration",
+      "item": [
+        {
+          "name": "Duplicate username",
+          "item": [
+            {
+              "name": "Successful registration",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var reqBody = JSON.parse(pm.request.body)",
+                      "var resBody = pm.response.json()",
+                      "",
+                      "pm.expect(resBody.userName).to.equal(reqBody.userName);",
+                      "pm.expect(resBody.password).to.not.be.empty;",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\":\"Mehran\",\n    \"dob\":\"1987-05-09\",\n    \"idDocumentBase64\":\"someImageBase64\",\n    \"userName\":\"user1\",\n    \"address\":{\n        \"country\":\"Belgium\",\n        \"city\":\"almere\",\n        \"postalCode\":\"1324SH\",\n        \"houseNumber\":\"60-c\"\n    }\n}\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/client-api/v1/register",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "client-api",
+                    "v1",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Duplicate username",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var resBody = pm.response.json()",
+                      "var reqBody = JSON.parse(pm.request.body)",
+                      "",
+                      "pm.expect(resBody.title).to.equal(\"Duplicate userName\");",
+                      "pm.expect(resBody.status).to.equal(409);",
+                      "pm.expect(resBody.detail).to.equal(\"The \" + reqBody.userName + \" userName already exist.\");"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\":\"Mehran\",\n    \"dob\":\"1987-05-09\",\n    \"idDocumentBase64\":\"someImageBase64\",\n    \"userName\":\"user1\",\n    \"address\":{\n        \"country\":\"Belgium\",\n        \"city\":\"almere\",\n        \"postalCode\":\"1324SH\",\n        \"houseNumber\":\"60-c\"\n    }\n}\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/client-api/v1/register",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "client-api",
+                    "v1",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Successful registration",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var reqBody = JSON.parse(pm.request.body)",
+                  "var resBody = pm.response.json()",
+                  "",
+                  "pm.expect(resBody.userName).to.equal(reqBody.userName);",
+                  "pm.expect(resBody.password).to.not.be.empty;",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\":\"Mehran\",\n    \"dob\":\"1987-05-09\",\n    \"idDocumentBase64\":\"someImageBase64\",\n    \"userName\":\"{{$randomUserName}}\",\n    \"address\":{\n        \"country\":\"Belgium\",\n        \"city\":\"almere\",\n        \"postalCode\":\"1324SH\",\n        \"houseNumber\":\"60-c\"\n    }\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/client-api/v1/register",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "client-api",
+                "v1",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Customer age is below 18",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var resBody = pm.response.json();",
+                  "",
+                  "pm.expect(resBody.title).to.equal(\"Validation Error\");",
+                  "pm.expect(resBody.status).to.equal(400);",
+                  "pm.expect(resBody.fieldValidationError).to.have.property(\"dob\", \"Customers above 18 year age are only allowed to register and create account.\");",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\":\"Mehran\",\n    \"dob\":\"2020-05-09\",\n    \"idDocumentBase64\":\"someImageBase64\",\n    \"userName\":\"mehran\",\n    \"address\":{\n        \"country\":\"Belgium\",\n        \"city\":\"almere\",\n        \"postalCode\":\"1324SH\",\n        \"houseNumber\":\"60-c\"\n    }\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/client-api/v1/register",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "client-api",
+                "v1",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Invalid address",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var resBody = pm.response.json();",
+                  "",
+                  "pm.expect(resBody.title).to.equal(\"Validation Error\");",
+                  "pm.expect(resBody.status).to.equal(400);",
+                  "pm.expect(resBody.fieldValidationError[\"address.country\"]).to.equal(\"The given country cannot be blank.\");",
+                  "pm.expect(resBody.fieldValidationError[\"address.houseNumber\"]).to.equal(\"The given house number cannot be blank.\");",
+                  "pm.expect(resBody.fieldValidationError[\"address.city\"]).to.equal(\"The given city cannot be blank.\");",
+                  "pm.expect(resBody.fieldValidationError[\"address.postalCode\"]).to.equal(\"The given postal code cannot be blank.\");",
+                  "",
+                  "",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\":\"Mehran\",\n    \"dob\":\"1990-05-09\",\n    \"idDocumentBase64\":\"someImageBase64\",\n    \"userName\":\"mehran\",\n    \"address\":{\n    }\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/client-api/v1/register",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "client-api",
+                "v1",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Invalid cutomer fields",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var resBody = pm.response.json();",
+                  "",
+                  "pm.expect(resBody.title).to.equal(\"Validation Error\");",
+                  "pm.expect(resBody.status).to.equal(400);",
+                  "pm.expect(resBody.fieldValidationError).to.have.property(\"idDocumentBase64\", \"The given Id document cannot be blank.\");",
+                  "pm.expect(resBody.fieldValidationError).to.have.property(\"name\", \"The given name cannot be blank.\");",
+                  "pm.expect(resBody.fieldValidationError).to.have.property(\"userName\", \"The given userName cannot be blank.\");",
+                  "",
+                  "",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"dob\":\"1990-05-09\",\n    \"address\":{\n        \"country\":\"Belgium\",\n        \"city\":\"almere\",\n        \"postalCode\":\"1324SH\",\n        \"houseNumber\":\"60-c\"\n    }\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/client-api/v1/register",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "client-api",
+                "v1",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Not supported country",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var resBody = pm.response.json();",
+                  "var reqBody = JSON.parse(pm.request.body)",
+                  "",
+                  "pm.expect(resBody.title).to.equal(\"Not supported country\");",
+                  "pm.expect(resBody.status).to.equal(422);",
+                  "pm.expect(resBody.detail).to.equal(\"The bank is not active in \" + reqBody.address.country + \".\");",
+                  "",
+                  "",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\":\"Mehran\",\n    \"dob\":\"1987-05-09\",\n    \"idDocumentBase64\":\"someImageBase64\",\n    \"userName\":\"{{$randomUserName}}\",\n    \"address\":{\n        \"country\":\"Iran\",\n        \"city\":\"almere\",\n        \"postalCode\":\"1324SH\",\n        \"houseNumber\":\"60-c\"\n    }\n}\n\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/client-api/v1/register",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "client-api",
+                "v1",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Logon",
+      "item": [
+        {
+          "name": "Successful logon",
+          "item": [
+            {
+              "name": "Successful registration",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var resBody = JSON.parse(responseBody);",
+                      "postman.setEnvironmentVariable(\"password\", resBody.password);",
+                      "postman.setEnvironmentVariable(\"userName\", resBody.userName);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\":\"Mehran\",\n    \"dob\":\"1987-05-09\",\n    \"idDocumentBase64\":\"someImageBase64\",\n    \"userName\":\"{{$randomUserName}}\",\n    \"address\":{\n        \"country\":\"Belgium\",\n        \"city\":\"almere\",\n        \"postalCode\":\"1324SH\",\n        \"houseNumber\":\"60-c\"\n    }\n}\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/client-api/v1/register",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "client-api",
+                    "v1",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Successful logon",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var resBody = JSON.parse(responseBody);",
+                      "",
+                      "pm.expect(resBody.accessToken).to.not.be.empty;"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"userName\":\"{{userName}}\",\n    \"password\":\"{{password}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/client-api/v1/logon",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "client-api",
+                    "v1",
+                    "logon"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Invalid password",
+          "item": [
+            {
+              "name": "Successful registration",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var resBody = JSON.parse(responseBody);",
+                      "postman.setEnvironmentVariable(\"password\", resBody.password);",
+                      "postman.setEnvironmentVariable(\"userName\", resBody.userName);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\":\"Mehran\",\n    \"dob\":\"1987-05-09\",\n    \"idDocumentBase64\":\"someImageBase64\",\n    \"userName\":\"{{$randomUserName}}\",\n    \"address\":{\n        \"country\":\"Belgium\",\n        \"city\":\"almere\",\n        \"postalCode\":\"1324SH\",\n        \"houseNumber\":\"60-c\"\n    }\n}\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/client-api/v1/register",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "client-api",
+                    "v1",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Invalid password",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var resBody = JSON.parse(responseBody);",
+                      "",
+                      "pm.expect(resBody.title).to.equal(\"Invalid credential\");",
+                      "pm.expect(resBody.status).to.equal(401);",
+                      "pm.expect(resBody.detail).to.equal(\"The userName and/or password are invalid.\");"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"userName\":\"{{userName}}\",\n    \"password\":\"Invalid password\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/client-api/v1/logon",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "client-api",
+                    "v1",
+                    "logon"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Invalid userName",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var resBody = JSON.parse(responseBody);",
+                  "",
+                  "pm.expect(resBody.title).to.equal(\"Invalid credential\");",
+                  "pm.expect(resBody.status).to.equal(401);",
+                  "pm.expect(resBody.detail).to.equal(\"The userName and/or password are invalid.\");"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"userName\":\"test\",\n    \"password\":\"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8080/client-api/v1/logon",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "client-api",
+                "v1",
+                "logon"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "overview",
+      "item": [
+        {
+          "name": "Authenticated user",
+          "item": [
+            {
+              "name": "Successful registration",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var resBody = JSON.parse(responseBody);",
+                      "postman.setEnvironmentVariable(\"password\", resBody.password);",
+                      "postman.setEnvironmentVariable(\"userName\", resBody.userName);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\":\"Mehran\",\n    \"dob\":\"1987-05-09\",\n    \"idDocumentBase64\":\"someImageBase64\",\n    \"userName\":\"{{$randomUserName}}\",\n    \"address\":{\n        \"country\":\"Belgium\",\n        \"city\":\"almere\",\n        \"postalCode\":\"1324SH\",\n        \"houseNumber\":\"60-c\"\n    }\n}\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/client-api/v1/register",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "client-api",
+                    "v1",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Successful logon",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var resBody = JSON.parse(responseBody);",
+                      "",
+                      "postman.setEnvironmentVariable(\"accessToken\", resBody.accessToken);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"userName\":\"{{userName}}\",\n    \"password\":\"{{password}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/client-api/v1/logon",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "client-api",
+                    "v1",
+                    "logon"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "overview",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var resBody = JSON.parse(responseBody);",
+                      "pm.response.to.have.status(200);",
+                      "",
+                      "pm.expect(resBody.name).to.not.be.empty;",
+                      "pm.expect(resBody.accounts).to.not.be.empty;",
+                      "pm.expect(resBody.accounts[0].accountNumber).to.not.be.empty;",
+                      "pm.expect(resBody.accounts[0].accountType).to.be.eql(\"CURRENT\");"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\":\"Mehran\",\n    \"address\":\"address1\",\n    \"dob\":\"1987-05-09\",\n    \"idDocumentBase64\":\"someImageBase64\",\n    \"userName\":\"mehran\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/client-api/v1/overview",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "client-api",
+                    "v1",
+                    "overview"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Unauthenticated user",
+          "item": [
+            {
+              "name": "overview",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.response.to.have.status(403);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}",
+                    "type": "text",
+                    "disabled": true
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\":\"Mehran\",\n    \"address\":\"address1\",\n    \"dob\":\"1987-05-09\",\n    \"idDocumentBase64\":\"someImageBase64\",\n    \"userName\":\"mehran\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8080/client-api/v1/overview",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "client-api",
+                    "v1",
+                    "overview"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

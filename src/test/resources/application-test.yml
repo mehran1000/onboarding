@@ -1,0 +1,10 @@
+abs-bank:
+  supported-countries:
+    - name: The Netherlands
+      code: NL
+      currency: EUR
+    - name: Belgium
+      code: BE
+      currency: EUR
+bucket4j:
+  enabled: false
